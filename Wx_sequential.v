@@ -8,6 +8,13 @@ output 	   [47:0] axis_m_tdata;
 output 			  axis_m_tvalid;
 output 			  axis_s_tready;	
 
+localparam X2 = 1;
+localparam X22 = 2;
+localparam X3 = 3;
+localparam VALID = 4;
+localparam RESTART = 5;
+
+
 reg [48:0] r_a;
 reg [48:0] r_b;
 
@@ -47,18 +54,18 @@ begin
 			x <= axis_s_tdata;
 			counter <= counter + 3'd1;
 		
-		if (counter == 3'd1) begin
-			x2 <= x * x;
+		if (counter == X2) begin
+			x2 <= result;
 
-		end else if (counter == 3'd2) begin
-			x2_mult_2 <= 2 * x2;
+		end else if (counter == X22) begin
+			x2_mult_2 <= result;
 
-		end else if (counter == 3'd3) begin
-			x3 <= x2 * x;
+		end else if (counter == X3) begin
+			x3 <= result;
 
-		end else if (counter == 3'd4) begin
+		end else if (counter == VALID) begin
 			data_valid <= 1'b1;
-		end else if (counter == 3'd5) begin
+		end else if (counter == RESTART) begin
 			x2 <= 16'd0;
 			x2_mult_2 <= 16'd0;
 			x3 <= 16'd0;
