@@ -1,21 +1,3 @@
-// module multiplier_16_bit(in_a, in_b, out_c);
-
-// input 	[15:0] in_a;
-// input 	[15:0] in_b;
-// output 	[15:0] out_c;
-
-// reg [15:0] c;
-
-// always @(in_a or in_b)
-// begin
-// 	c <= in_a * in_b;
-// end
-
-// assign out_c = c;
-
-// endmodule
-
-
 module Wx_sequential(in_clock, axis_s_tvalid, axis_m_tready, axis_s_tdata, axis_m_tdata, axis_m_tvalid, axis_s_tready);
 
 input             in_clock;
@@ -26,8 +8,23 @@ output 	   [47:0] axis_m_tdata;
 output 			  axis_m_tvalid;
 output 			  axis_s_tready;	
 
-reg [48:0] r_a = 16'd0;
-reg [48:0] r_b = 16'd0;
+reg [48:0] r_a;
+reg [48:0] r_b;
+
+wire [47 : 0] result;
+
+
+assign r_a = (counter == 3'd1) ? x :
+			 ((counter == 3'd2) || (counter == 3'd3)) ? x2 :
+			 48'd0;
+
+assign r_b = ((counter == 3'd1) || (counter == 3'd3)) ? x :
+			 ((counter == 3'd2)) ? 48'd2 :
+			 48'd0;
+
+assign result = r_a * r_b;
+
+
 wire [47:0] ab;
 wire [47:0] data;
 
@@ -51,25 +48,17 @@ begin
 			counter <= counter + 3'd1;
 		
 		if (counter == 3'd1) begin
-			r_a <= x;
-			r_b <= x;
 			x2 <= x * x;
 
 		end else if (counter == 3'd2) begin
-			r_a <= x2;
-			r_b <= 48'd2;
 			x2_mult_2 <= 2 * x2;
 
 		end else if (counter == 3'd3) begin
-			r_a <= x2;
-			r_b <= x;
 			x3 <= x2 * x;
 
 		end else if (counter == 3'd4) begin
 			data_valid <= 1'b1;
 		end else if (counter == 3'd5) begin
-			r_a <= 16'd0;
-			r_b <= 16'd0;
 			x2 <= 16'd0;
 			x2_mult_2 <= 16'd0;
 			x3 <= 16'd0;
@@ -78,13 +67,6 @@ begin
 		end
 		
 end
-
-// multiplier_16_bit mult
-//     (
-// 		  .in_a(r_a),
-// 		  .in_b(r_b),
-// 	      .out_c(ab)
-//     );
 
 assign axis_m_tdata = x3 + x2_mult_2 + x + 16'd1;
 assign axis_m_tvalid = ((data_valid == 1'b1) && (axis_m_tready == 1'b1)) ? 1'b1 :
