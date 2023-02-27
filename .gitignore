@@ -1,7 +1,9 @@
 **/__pycache__
 **/sim_build
 
-*.vcd
 
-*.xml
+/*.vcd
+/*.xml
+
 if_test.py
+
