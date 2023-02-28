@@ -1,8 +1,12 @@
 **/__pycache__
 **/sim_build
-
+**/lib
+**/lib64
+**/include
+**/bin
 
 /*.vcd
 /*.xml
+/*.cfg
 
 if_test.py
