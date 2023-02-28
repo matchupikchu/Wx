@@ -7,5 +7,6 @@
 
 /*.vcd
 /*.xml
+/*.cfg
 
 if_test.py
