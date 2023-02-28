@@ -1,10 +1,11 @@
 
 import cocotb
+from cocotb.scoreboard import Scoreboard
 from cocotb.clock import Clock
 from cocotb_bus.drivers import BusDriver
 from cocotb_bus.monitors import BusMonitor
 from cocotb.triggers import RisingEdge, Timer
-from cocotb import Scoreboard
+
 
 def Wx(x):
     return x**3 + (2*(x**2)) + x + 1
@@ -66,7 +67,7 @@ class IO_Monitor(BusMonitor):
 class TbPolynomial(object):
     def __init__(self, dut):
         self.dut = dut
-        self.scoreboard = Scoreboard(dut)
+        self.scoreboard = cocotb.Scoreboard(dut)
     
     def start_clock(self, clk_period = 10):
         self.dut._log.info("Running clock")

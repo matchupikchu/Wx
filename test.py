@@ -37,8 +37,8 @@ async def test_case_classes(dut):
         
         await in_driver._driver_send(x)
 
-
-async def test(dut):
+@cocotb.test()
+def test(dut):
     
     tb = Polynomial(dut)
     dut.axis_m_tready.value = 1
@@ -49,11 +49,11 @@ async def test(dut):
     for i in range(10):
         x = random.randint(0, 2**16)
 
-        await tb.axis_s_driver._driver_send(x)
+        yield tb.axis_s_driver._driver_send(x)
 
 
 
 
-factory = TestFactory(test) 
-factory.generate_tests()
+# factory = TestFactory(test) 
+# factory.generate_tests()
 
