@@ -1,11 +1,10 @@
-import random
 
 import cocotb
-from cocotb.regression import TestFactory
 from cocotb.clock import Clock
 from cocotb_bus.drivers import BusDriver
-from cocotb_bus.monitors import BusMonitor, Monitor
-from cocotb.triggers import RisingEdge, FallingEdge, Timer, ReadOnly, NextTimeStep
+from cocotb_bus.monitors import BusMonitor
+from cocotb.triggers import RisingEdge, Timer
+from cocotb import Scoreboard
 
 def Wx(x):
     return x**3 + (2*(x**2)) + x + 1
@@ -25,6 +24,7 @@ class InputDriver(BusDriver):
         self.log.info(f"Expected value of W(x) {Wx(data)}")
         
 
+        self.entity.axis_m_tready.value = 1
         self.bus.tvalid.value = 1
         self.bus.tdata.value = data
 
@@ -66,6 +66,7 @@ class IO_Monitor(BusMonitor):
 class TbPolynomial(object):
     def __init__(self, dut):
         self.dut = dut
+        self.scoreboard = Scoreboard(dut)
     
     def start_clock(self, clk_period = 10):
         self.dut._log.info("Running clock")
@@ -75,6 +76,8 @@ class TbPolynomial(object):
 class Polynomial(TbPolynomial):
     def __init__(self, dut):
         super(Polynomial, self).__init__(dut)
+
+        dut.axis_m_tready.value = 1
 
         self.dut.axis_s_tvalid.value = 0
         self.dut.axis_m_tready.value = 1
