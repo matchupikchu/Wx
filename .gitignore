@@ -8,5 +8,6 @@
 /*.vcd
 /*.xml
 /*.cfg
+/*.out
 
 if_test.py

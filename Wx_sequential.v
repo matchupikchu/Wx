@@ -15,8 +15,8 @@ localparam VALID = 4;
 localparam RESTART = 5;
 
 
-reg [48:0] r_a;
-reg [48:0] r_b;
+wire [48:0] r_a;
+wire [48:0] r_b;
 
 wire [47 : 0] result;
 

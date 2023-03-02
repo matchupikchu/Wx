@@ -2,47 +2,50 @@ import random
 
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import Timer
-from cocotb.scoreboard import Scoreboard
+# from cocotb.triggers import Timer
+# from cocotb.scoreboard import Scoreboard
 from cocotb.regression import TestFactory
-from utilities import InputDriver, IO_Monitor, Polynomial, Wx
+from utilities import SlaveDriver, MasterDriver, SlaveMonitor, MasterMonitor, Polynomial, Wx
 
    
 
 @cocotb.test()
-async def test_case_classes(dut):
+async def test_primitive(dut):
 
     clock = Clock(dut.in_clock, 10, units="ns")
     cocotb.start(clock.start())
 
     # global expected_value
-    # expected_value = []
+    expected_value = []
 
-    dut.axis_s_tvalid.value = 0
-    dut.axis_m_tready.value = 1
-    dut.axis_s_tdata.value = 0
+    # dut.axis_s_tvalid.value = 0
+    # dut.axis_m_tready.value = 1
+    # dut.axis_s_tdata.value = 0
 
 
-    in_driver = InputDriver(dut, "axis_s", dut.in_clock)
-    slave_monitor = IO_Monitor(dut, name = "axis_s", clock = dut.in_clock)
-    master_monitor = IO_Monitor(dut, name = "axis_m", clock = dut.in_clock, callback=Wx)
+    slave_driver = SlaveDriver(dut, "axis_s", dut.in_clock)
+    master_driver = MasterDriver(dut, "axis_m", dut.in_clock)
 
-    await in_driver._driver_send(0)
+
+    slave_monitor = SlaveMonitor(dut, name = "axis_s", clock = dut.in_clock)
+    master_monitor = MasterMonitor(dut, name = "axis_m", clock = dut.in_clock, callback=Wx)
+    
+    master_driver.set_dut_master_ready()
+
+    await slave_driver._driver_send(0)
 
     for _ in range(10):
 
         x = random.randint(0, 2*16)
-
-        # expected_value.append(Wx(x))
         
-        await in_driver._driver_send(x)
+        await slave_driver._driver_send(x)
+
+
 
 
 async def test(dut):
     
     tb = Polynomial(dut)
-    dut.axis_m_tready.value = 1
-
 
     tb.start_clock()
 
