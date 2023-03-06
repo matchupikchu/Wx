@@ -30,7 +30,7 @@ class SlaveDriver(BusDriver):
 
         await Timer(10, "ns")
         self.bus.tvalid.value = 0
-        self.bus.tdata.value = 0
+        self.bus.tdata.value = data
 
         while self.bus.tready.value == 0:
             await Timer(10, "ns")
@@ -46,6 +46,8 @@ class MasterDriver(BusDriver):
     
     def set_dut_master_ready(self):
         self.bus.tready.value = 1
+        self.bus.tvalid.value = 0
+        self.bus.tdata.value  = 0
 
 
 class SlaveMonitor(BusMonitor):
@@ -71,13 +73,10 @@ class SlaveMonitor(BusMonitor):
         while True:
             yield RisingEdge(self.clock)
             if self.tvalid.value == 1:
+
                 self.log.info(f"{self.name} tvalid {int(self.tvalid)}")
                 self.log.info(f"{self.name} tready {int(self.tready)}")
                 self.log.info(f"{self.name} tdata {int(self.tdata)}")
-                
-                # tdata = int(self.tdata.value)
-                # assert int(self.dut.axis_m_tdata.value) == tdata, f'{self.dut.axis_m_tdata.value} {tdata}'
-                # self._recv(tdata)
                 
 class MasterMonitor(BusMonitor):
     
@@ -105,6 +104,7 @@ class MasterMonitor(BusMonitor):
                 self.log.info(f"{self.name} tvalid {int(self.tvalid)}")
                 self.log.info(f"{self.name} tready {int(self.tready)}")
                 self.log.info(f"{self.name} tdata {int(self.tdata)}")
+                assert Wx(int(self.entity.axis_s_tdata.value)) == int(self.entity.axis_m_tdata.value), f"{Wx(int(self.entity.axis_s_tdata.value))} {int(self.entity.axis_m_tdata.value)}"
         
 
 
@@ -121,10 +121,6 @@ class SScoreboard(Scoreboard):
     def __init__(self, dut, sb_fun):
         self.dut = dut
         self.sb_fun = sb_fun
-
-
-
-    # def compare(self, got, exp, log):
         
 
 class Polynomial(TbPolynomial):

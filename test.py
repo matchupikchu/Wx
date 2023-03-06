@@ -32,8 +32,6 @@ async def test_primitive(dut):
     
     master_driver.set_dut_master_ready()
 
-    await slave_driver._driver_send(0)
-
     for _ in range(10):
 
         x = random.randint(0, 2*16)
