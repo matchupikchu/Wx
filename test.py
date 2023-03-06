@@ -2,8 +2,6 @@ import random
 
 import cocotb
 from cocotb.clock import Clock
-# from cocotb.triggers import Timer
-# from cocotb.scoreboard import Scoreboard
 from cocotb.regression import TestFactory
 from utilities import SlaveDriver, MasterDriver, SlaveMonitor, MasterMonitor, Polynomial, Wx
 
@@ -15,12 +13,7 @@ async def test_primitive(dut):
     clock = Clock(dut.in_clock, 10, units="ns")
     cocotb.start(clock.start())
 
-    # global expected_value
     expected_value = []
-
-    # dut.axis_s_tvalid.value = 0
-    # dut.axis_m_tready.value = 1
-    # dut.axis_s_tdata.value = 0
 
 
     slave_driver = SlaveDriver(dut, "axis_s", dut.in_clock)

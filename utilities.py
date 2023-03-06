@@ -151,7 +151,5 @@ class Polynomial(TbPolynomial):
     
     def model(self, y):
         self.expected_output.append(y)
-        # assert 
-    
-    # def comp(self, s_driver, m_driver):
+
 
