@@ -1,11 +1,13 @@
 module Wx_sequential(in_clock, axis_s_tvalid, axis_m_tready, axis_s_tdata, axis_m_tdata, axis_m_tvalid, axis_s_tready);
 
 input             in_clock;
-input             axis_s_tvalid;
-input 			  axis_m_tready;
-input      [15:0] axis_s_tdata;
-output 	   [47:0] axis_m_tdata;
+
 output 			  axis_m_tvalid;
+output 	   [47:0] axis_m_tdata;
+input 			  axis_m_tready;
+
+input             axis_s_tvalid;
+input      [15:0] axis_s_tdata;
 output 			  axis_s_tready;	
 
 localparam X2 = 1;
